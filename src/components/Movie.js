@@ -104,20 +104,48 @@ const Movie = (props) => {
   const handleDown = () => {
     console.log('Down clicked!')
   };
+  const handleTop = () => {
+    console.log('Top clicked!')
+  };
+  const handleBottom = () => {
+    console.log('Bottom clicked!')
+  };
+  const handleNote = () => {
+    console.log('Note clicked!')
+  };
+  const headerStyle = {
+    backgroundColor: '#e2e2e2'
+  };
+  const titleStyle = {
+    fontSize: 28 + 'px'
+  };
+  const subtitleStyle = {
+    fontSize: '18px'
+  };
   const cardStyle = {
-    marginTop: 20 + 'px',
+    marginTop: 36 + 'px',
   };
   const mediaStyle = {
-    width: 185 + 'px'
-  }
+    maxWidth: '185px',
+    float: 'left'
+  };
+  const textStyle = {
+    width: '60%',
+    float: 'right',
+    minHeight: '280px',
+    letterSpacing: '.5px',
+    fontSize: '16px',
+    lineHeight: 1.3,
+    wordSpacing: '1px'
+  };
   const chipWrap = {
     display: 'flex',
     flexWrap: 'wrap',
-    padding: 16 + 'px'
-  }
+  };
   const chipStyle = {
-    margin: 4 + 'px'
-  }
+    margin: 4 + 'px',
+  };
+
   const genres = movie.genre_ids.map(genre => {
     const genreText = genreList.find(genreInfo => genreInfo.id == genre);
     if (genreText) {
@@ -129,30 +157,34 @@ const Movie = (props) => {
     }
   });
   return (
-    <Card>
+    <Card initiallyExpanded={false} style={cardStyle}> 
       <CardHeader
         title={movie.original_title}
         subtitle={date}
         actAsExpander={false}
         showExpandableButton={true}
-        style={cardStyle}
+        titleStyle={titleStyle}
+        subtitleStyle={subtitleStyle}
+        style={headerStyle}
       />
       <CardText expandable={true}>
-        <CardMedia
-          style={mediaStyle}> 
-          <img src={`https://image.tmdb.org/t/p/w185/${movie.poster_path}`} />
-        </CardMedia>
-        <p>{movie.overview}</p>
-        <p>{movie.cast}</p>
-      </CardText>
-      <div style={chipWrap}>
-         {genres}
-      </div>
+        <img style={mediaStyle} src={`https://image.tmdb.org/t/p/w185/${movie.poster_path}`} />
+        <div style={textStyle}>
+          <p>{movie.overview}</p>
+          <div style={chipWrap}>
+            {genres}
+          </div>
+        </div>
+      </CardText>    
       <MovieActions 
         name={movie.original_title}
         onDelete={handleDelete}
         onUp={handleUp}
-        onDown={handleDown} />
+        onDown={handleDown}
+        onTop={handleTop}
+        onBottom={handleBottom}
+        onNote={handleNote}
+        />
     </Card>
   )
 }
