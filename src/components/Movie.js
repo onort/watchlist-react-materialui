@@ -94,15 +94,15 @@ const Movie = (props) => {
   const handleTouchTap = (e) => {
     console.log(e);
   };
-  const handleDelete = (e) => {
-    console.log(e);
-    console.log('Delete clicked!')
-  }
+  const handleDelete = () => {
+    props.onDelete(movie.id);
+  };
+
   const handleUp = () => {
-    console.log('Up clicked!')
+    props.onUp(movie.id);
   };
   const handleDown = () => {
-    console.log('Down clicked!')
+    props.onDown(movie.id);
   };
   const handleTop = () => {
     console.log('Top clicked!')
