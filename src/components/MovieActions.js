@@ -10,15 +10,18 @@ import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import NavigationMoreHoriz from 'material-ui/svg-icons/navigation/more-horiz';
+import Watched from 'material-ui/svg-icons/av/playlist-add-check';
 
 
 const MovieActions = (props) => {
   const trailerUrl = `https://www.youtube.com/results?search_query=${encodeURI(props.name + ' trailer')}`;
-  const alignRight = {
-    float: 'right'
-  }
-  const actionsStyle = {
-    clear: 'both'
+  const styles = {
+    right: {
+      float: 'right'
+    },
+    actions: {
+      clear: 'both'
+    }
   }
   const onDelete = (e) => {
     props.onDelete(e);
@@ -38,13 +41,19 @@ const MovieActions = (props) => {
   const onNote = () => {
     props.onNote();
   };
+  const onWatched = () => {
+    props.onWatched();
+  }
   return (
-    <CardActions style={actionsStyle}>
+    <CardActions style={styles.actions}>
       <IconButton onTouchTap={onUp}>
         <ArrowUp />
       </IconButton>
       <IconButton onTouchTap={onDown}>
         <ArrowDown />
+      </IconButton>
+      <IconButton onTouchTap={onWatched}>
+        <Watched />
       </IconButton>
       <IconButton onTouchTap={onDelete}>
           <DeleteIcon />
@@ -58,7 +67,7 @@ const MovieActions = (props) => {
         <MenuItem onTouchTap={onBottom} primaryText="Move to Bottom" />
         <MenuItem onTouchTap={onNote} primaryText="Add Note" />
       </IconMenu>
-      <div style={alignRight}>
+      <div style={styles.right}>
         <IconButton tooltipPosition="bottom-center" tooltip="Add Note">
           <AVNote />
         </IconButton>

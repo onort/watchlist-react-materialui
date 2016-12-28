@@ -113,65 +113,71 @@ const Movie = (props) => {
   const handleNote = () => {
     console.log('Note clicked!')
   };
-  const headerStyle = {
-    backgroundColor: '#e2e2e2'
-  };
-  const titleStyle = {
-    fontSize: 28 + 'px'
-  };
-  const subtitleStyle = {
-    fontSize: '18px'
-  };
-  const cardStyle = {
-    marginTop: 36 + 'px',
-  };
-  const mediaStyle = {
-    maxWidth: '185px',
-    float: 'left'
-  };
-  const textStyle = {
-    width: '60%',
-    float: 'right',
-    minHeight: '280px',
-    letterSpacing: '.5px',
-    fontSize: '16px',
-    lineHeight: 1.3,
-    wordSpacing: '1px'
-  };
-  const chipWrap = {
-    display: 'flex',
-    flexWrap: 'wrap',
-  };
-  const chipStyle = {
-    margin: 4 + 'px',
-  };
+  const handleWatched = () => {
+    props.onWatched(movie);
+  }
+
+  const styles = {
+    header: {
+      backgroundColor: '#e2e2e2'
+    },
+    title: {
+      fontSize: '28px'
+    },
+    subtitle: {
+      fontSize: '18px'
+    },
+    card: {
+      marginTop: 36 + 'px',
+    },
+    media: {
+      maxWidth: '185px',
+      float: 'left'
+    },
+    desc: {
+      width: '60%',
+      float: 'right',
+      minHeight: '280px',
+      letterSpacing: '.5px',
+      fontSize: '16px',
+      lineHeight: 1.3,
+      wordSpacing: '1px'
+    },
+    chipWrap: {
+      display: 'flex',
+      flexWrap: 'wrap',
+    },
+    chip: {
+      margin: 4 + 'px',
+    }
+  }
 
   const genres = movie.genre_ids.map(genre => {
     const genreText = genreList.find(genreInfo => genreInfo.id == genre);
     if (genreText) {
       return (
-        <Chip key={genre} style={chipStyle} onTouchTap={handleTouchTap}>
+        <Chip key={genre} style={styles.chip} onTouchTap={handleTouchTap}>
           {genreText.name}
         </Chip>
       );
     }
   });
   return (
-    <Card initiallyExpanded={false} style={cardStyle}> 
+    <Card initiallyExpanded={false} style={styles.card}> 
       <CardHeader
         title={movie.original_title}
         subtitle={date}
         actAsExpander={false}
         showExpandableButton={true}
-        titleStyle={titleStyle}
-        subtitleStyle={subtitleStyle}
-        style={headerStyle}
+        style={styles.header}
+        titleStyle={styles.title}
+        subtitleStyle={styles.subtitle}
       />
       <CardText expandable={true}>
-        <img style={mediaStyle} src={`https://image.tmdb.org/t/p/w185/${movie.poster_path}`} />
-        <div style={textStyle}>
+        <img style={styles.media} src={`https://image.tmdb.org/t/p/w185/${movie.poster_path}`} />
+        <div style={styles.desc}>
           <p>{movie.overview}</p>
-          <div style={chipWrap}>
+          <div style={styles.chipWrap}>
             {genres}
           </div>
         </div>
@@ -184,6 +190,7 @@ const Movie = (props) => {
         onTop={handleTop}
         onBottom={handleBottom}
         onNote={handleNote}
+        onWatched={handleWatched}
         />
     </Card>
   )

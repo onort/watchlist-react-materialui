@@ -8,7 +8,8 @@ const MovieList = (props) => {
     return <Movie key={movie.id} movie={movie}
             onDelete={props.handleDelete}
             onUp={props.handleUp}
-            onDown={props.handleDown} />
+            onDown={props.handleDown}
+            onWatched={props.handleWatched} />
   });
   return (
     <div>
