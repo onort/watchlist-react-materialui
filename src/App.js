@@ -6,6 +6,7 @@ import * as utils from './utils';
 import AppBar from 'material-ui/AppBar';
 import FlatButton from 'material-ui/FlatButton'
 import FontIcon from 'material-ui/FontIcon';
+import Snackbar from 'material-ui/Snackbar';
 
 import AddMovie from './components/AddMovie';
 import Movie from './components/Movie';
@@ -29,13 +30,15 @@ class App extends Component {
     super(props);
     this.state = {
       movies: [],
-      watched: []
+      watched: [],
+      snack: { open: false, message: '' }
     }
-  this.handleDelete = this.handleDelete.bind(this);
-  this.handleUp = this.handleUp.bind(this);
-  this.handleDown = this.handleDown.bind(this);
-  this.handleWatched = this.handleWatched.bind(this);
   this.handleAdd = this.handleAdd.bind(this);
+  this.handleDelete = this.handleDelete.bind(this);
+  this.handleDown = this.handleDown.bind(this);
+  this.handleUp = this.handleUp.bind(this);
+  this.handleWatched = this.handleWatched.bind(this);
+  this.snackClose = this.snackClose.bind(this);
   }
 
   componentDidMount() {
@@ -52,7 +55,8 @@ class App extends Component {
   handleDelete(id) {
     let movies = utils.deleteMovie(this.state.movies, id);
     // TODO: Delete should update queue properties for other elements
-    this.setState({ movies });
+    let snack = {open: true, message: 'Movie deleted'};
+    this.setState({ movies, snack });
   }
 
   handleUp(id) {
@@ -75,11 +79,19 @@ class App extends Component {
       watched.push(movie);
     }
     let movies = utils.deleteMovie(this.state.movies, movie.id);
-    this.setState({ watched, movies });
+    let snack = {open: true, message: 'Marked as watched'};
+    this.setState({ watched, movies, snack });
   }
 
   handleAdd() {
     console.log('Add clicked!');
+    let snack = {open: true, message: 'Added to watchlist'};
+    this.setState({ snack });
+  }
+
+  snackClose() {
+    const snack = { open: false, message: '' }
+    this.setState({ snack })
   }
 
   render() {
@@ -95,6 +107,12 @@ class App extends Component {
             handleDown={this.handleDown}
             handleWatched={this.handleWatched} />
         </div>
+        <Snackbar
+          open={this.state.snack.open}
+          message={this.state.snack.message}
+          autoHideDuration={2000}
+          onRequestClose={this.snackClose}
+        />
       </div>
     )
   }
