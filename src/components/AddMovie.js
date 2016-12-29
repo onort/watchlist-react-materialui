@@ -1,4 +1,8 @@
 import React, { Component } from 'react';
+import axios from 'axios';
+
+import movieApi from '../api/tmdbApi';
+import ResultsList from './ResultsList';
 
 import AddToList from 'material-ui/svg-icons/av/playlist-add';
 import Dialog from 'material-ui/Dialog';
@@ -11,13 +15,15 @@ class AddMovie extends Component {
     super(props);
     this.state = {
       addOpen: false,
-      query: ''
+      query: '',
+      results: []
     }
 
     this.handleAdd = this.handleAdd.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.handleClose = this.handleClose.bind(this);
+    this.handleQuery = this.handleQuery.bind(this);
   }
 
   handleAdd() {
@@ -31,12 +37,21 @@ class AddMovie extends Component {
   }
   
   handleClose() {
-    this.setState({ addOpen: false });
+    this.setState({ addOpen: false, results: [], query: '' });
   }
 
   handleChange(e) {
     this.setState({ query: e.target.value })
-    console.log(this.state.query);
+  }
+
+  handleQuery() {
+    console.log('Query: ', this.state.query);
+    let results = movieApi.searchMovie(this.state.query)
+      .then(results => {
+        this.setState({ results: results.data.results });
+        console.log('State updated with ', results.data.results)
+      })
+      .catch(err => console.log(err));
   }
 
   render() {
@@ -53,7 +68,6 @@ class AddMovie extends Component {
       dialog: {
         width: '50%',
         minWidth: '400px',
-        top: '-100px'
       }
     }
     const actions = [
@@ -63,10 +77,10 @@ class AddMovie extends Component {
         onTouchTap={this.handleClose}
       />,
       <FlatButton
-        label="Submit"
+        label="Search"
         primary={true}
         keyboardFocused={true}
-        onTouchTap={this.handleClose}
+        onTouchTap={this.handleQuery}
       />
     ]
     return (
@@ -85,6 +99,7 @@ class AddMovie extends Component {
           contentStyle={styles.dialog} >
           <TextField hintText="Search for a movie.."
             onChange={this.handleChange}  />
+          {this.state.results.length ? <ResultsList results={this.state.results} /> : ''}
         </Dialog>
       </div>
     )
