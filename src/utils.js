@@ -17,8 +17,26 @@ export function moveDown(movies, id) {
 
 export function deleteMovie(movies, id) {
   let index = movies.findIndex(movie => movie.id === id);
+  movies = updateQueuePropAfterDel(movies, id);
   movies.splice(index, 1);
-  // TODO: Delete should update queue properties for other elements
-  // update queue props for movies on list
   return movies;
+}
+
+function updateQueuePropAfterDel(movies, id) {
+  let deleteIndex = movies.findIndex(movie => movie.id === id)
+  movies.forEach((movie, index) => {
+    if (index > deleteIndex) movie.queue--;
+  });
+  return movies;
+}
+
+export function debounce(fn, delay) {
+  var timer = null;
+  return function () {
+    var context = this, args = arguments;
+    clearTimeout(timer);
+    timer = setTimeout(function () {
+      fn.apply(context, args);
+    }, delay);
+  };
 }

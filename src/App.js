@@ -31,13 +31,16 @@ class App extends Component {
     this.state = {
       movies: [],
       watched: [],
-      snack: { open: false, message: '' }
+      snack: { open: false, message: '' },
+      filteredMovies: []
     }
   this.handleAdd = this.handleAdd.bind(this);
   this.handleDelete = this.handleDelete.bind(this);
   this.handleDown = this.handleDown.bind(this);
+  this.handleGenre = this.handleGenre.bind(this);
   this.handleUp = this.handleUp.bind(this);
   this.handleWatched = this.handleWatched.bind(this);
+  this.showAll = this.showAll.bind(this);
   this.snackClose = this.snackClose.bind(this);
   }
 
@@ -84,12 +87,18 @@ class App extends Component {
     this.setState({ watched, movies, snack });
   }
 
+  handleGenre(genre) {
+    let filtered = this.state.movies.filter(movie => movie.genre_ids.includes(genre));
+    this.setState({ filteredMovies: filtered});
+  }
+
   handleAdd(movie) {
     console.log('Movie to add', movie);
     let snack = {open: true, message: 'Added to watchlist'};
     let movies = this.state.movies;
     let lastQueue;
     movies.length ? lastQueue = movies[movies.length -1].queue : lastQueue = -1
+    movie.addedAt = Date.now();
     movie.queue = lastQueue + 1;
     movies.push(movie);
     this.setState({ snack, movies });
@@ -100,18 +109,25 @@ class App extends Component {
     this.setState({ snack })
   }
 
+  showAll() {
+    this.setState({ filteredMovies: [] });
+  }
+
   render() {
     return (
       <div>
         <AppBar title="Movie Watchlist" />
         <div style={styles.divStyle}>
           <AddMovie handleAdd={this.handleAdd} />
-
+          <FlatButton onTouchTap={this.showAll} label="Show All" disabled={!this.state.filteredMovies.length}/>
           <MovieList movies={this.state.movies} 
             handleDelete={this.handleDelete}
             handleUp={this.handleUp}
             handleDown={this.handleDown}
-            handleWatched={this.handleWatched} />
+            handleWatched={this.handleWatched}
+            handleGenre={this.handleGenre}
+            filteredMovies={this.state.filteredMovies}
+            />
         </div>
         <Snackbar
           open={this.state.snack.open}

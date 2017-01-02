@@ -91,8 +91,8 @@ const genreList = [
 const Movie = (props) => {
   const movie = props.movie;
   const date = movie.release_date.slice(0,4);
-  const handleTouchTap = (e) => {
-    console.log(e);
+  const handleGenreClick = (genre) => {
+    props.onGenre(genre);
   };
   const handleDelete = () => {
     props.onDelete(movie.id);
@@ -156,7 +156,7 @@ const Movie = (props) => {
     const genreText = genreList.find(genreInfo => genreInfo.id == genre);
     if (genreText) {
       return (
-        <Chip key={genre} style={styles.chip} onTouchTap={handleTouchTap}>
+        <Chip key={genre} style={styles.chip} onTouchTap={handleGenreClick.bind(this, genre)}>
           {genreText.name}
         </Chip>
       );

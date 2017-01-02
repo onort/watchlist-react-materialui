@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
+import {debounce} from '../utils';
 import movieApi from '../api/tmdbApi';
 import ResultsList from './ResultsList';
 
@@ -23,6 +24,7 @@ class AddMovie extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.handleClose = this.handleClose.bind(this);
+    this.handleKeyUp = debounce(this.handleKeyUp.bind(this), 300);
     this.handleQuery = this.handleQuery.bind(this);
   }
 
@@ -32,9 +34,7 @@ class AddMovie extends Component {
   }
 
   handleClick() {
-    console.log('Reporing from AddMvoie: Add clicked');
     this.setState({ addOpen: true })
-    // this.handleAdd();
   }
   
   handleClose() {
@@ -45,7 +45,12 @@ class AddMovie extends Component {
     this.setState({ query: e.target.value })
   }
 
-  handleQuery() {
+
+  handleKeyUp(e) {
+    if (this.state.query.length > 2) this.handleQuery();
+  }
+
+  handleQuery(e) {
     console.log('Query: ', this.state.query);
     let results = movieApi.searchMovie(this.state.query)
       .then(results => {
@@ -98,8 +103,10 @@ class AddMovie extends Component {
           open={this.state.addOpen}
           onRequestClose={this.handleClose}
           contentStyle={styles.dialog} >
-          <TextField hintText="Search for a movie.."
-            onChange={this.handleChange}  />
+            <TextField hintText="Search for a movie.."
+              onChange={this.handleChange}
+              onKeyUp={this.handleKeyUp}
+              />
           {this.state.results.length ? <ResultsList results={this.state.results} onAdd={this.handleAdd} /> : ''}
         </Dialog>
       </div>

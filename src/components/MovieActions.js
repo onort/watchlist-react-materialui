@@ -68,7 +68,7 @@ const MovieActions = (props) => {
         <MenuItem onTouchTap={onNote} primaryText="Add Note" />
       </IconMenu>
       <div style={styles.right}>
-        <IconButton tooltipPosition="bottom-center" tooltip="Add Note">
+        <IconButton tooltipPosition="bottom-center" tooltip="Add Note" disabled>
           <AVNote />
         </IconButton>
         <IconButton tooltipPosition="bottom-center" tooltip="Watch Trailer">
