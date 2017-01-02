@@ -70,12 +70,13 @@ class App extends Component {
   }
 
   handleWatched(movie) {
-    movie.markedWatchedOn = Date.now();
     let watched = this.state.watched;
     let isWatched = watched.find(watchedMvoie => watchedMvoie.id === movie.id);
     if (isWatched) {
       return;
     } else {
+      movie.markedWatchedOn = Date.now();
+      delete movie.queue;
       watched.push(movie);
     }
     let movies = utils.deleteMovie(this.state.movies, movie.id);
@@ -83,10 +84,15 @@ class App extends Component {
     this.setState({ watched, movies, snack });
   }
 
-  handleAdd() {
-    console.log('Add clicked!');
+  handleAdd(movie) {
+    console.log('Movie to add', movie);
     let snack = {open: true, message: 'Added to watchlist'};
-    this.setState({ snack });
+    let movies = this.state.movies;
+    let lastQueue;
+    movies.length ? lastQueue = movies[movies.length -1].queue : lastQueue = -1
+    movie.queue = lastQueue + 1;
+    movies.push(movie);
+    this.setState({ snack, movies });
   }
 
   snackClose() {

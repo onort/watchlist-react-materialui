@@ -26,8 +26,9 @@ class AddMovie extends Component {
     this.handleQuery = this.handleQuery.bind(this);
   }
 
-  handleAdd() {
-    this.props.handleAdd();
+  handleAdd(movie) {
+    this.props.handleAdd(movie);
+    this.handleClose();
   }
 
   handleClick() {
@@ -99,7 +100,7 @@ class AddMovie extends Component {
           contentStyle={styles.dialog} >
           <TextField hintText="Search for a movie.."
             onChange={this.handleChange}  />
-          {this.state.results.length ? <ResultsList results={this.state.results} /> : ''}
+          {this.state.results.length ? <ResultsList results={this.state.results} onAdd={this.handleAdd} /> : ''}
         </Dialog>
       </div>
     )
