@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import * as firebase from 'firebase';
-import {fbConfig} from './api/config';
 import * as utils from './utils';
+
+import * as fb from './api/firebaseApi';
 
 import AppBar from 'material-ui/AppBar';
 import FlatButton from 'material-ui/FlatButton'
@@ -11,12 +11,6 @@ import Snackbar from 'material-ui/Snackbar';
 import AddMovie from './components/AddMovie';
 import Movie from './components/Movie';
 import MovieList from './components/MovieList';
-
-firebase.initializeApp(fbConfig);
-
-const dbRef = firebase.database().ref();
-const userId = 'firstUser';
-const userMoviesRef = dbRef.child(userId).child('watchList');
 
 const styles = {
   divStyle : {
@@ -45,19 +39,11 @@ class App extends Component {
   }
 
   componentDidMount() {
-    // Move to FirebaseApi
-    userMoviesRef.once('value', snap => {
-      let snapData = snap.val();
-      // Convert Object to Array and sort by queue property
-      let watchListData = Object.keys(snapData).map(key => snapData[key]);
-      watchListData.sort((a,b) => a.queue - b.queue);
-      this.setState({ movies: watchListData })
-    })
+    fb.getData().then(movies => this.setState({ movies }))
   }
 
   handleDelete(id) {
     let movies = utils.deleteMovie(this.state.movies, id);
-    // TODO: Delete should update queue properties for other elements
     let snack = {open: true, message: 'Movie deleted'};
     this.setState({ movies, snack });
   }
@@ -73,15 +59,7 @@ class App extends Component {
   }
 
   handleWatched(movie) {
-    let watched = this.state.watched;
-    let isWatched = watched.find(watchedMvoie => watchedMvoie.id === movie.id);
-    if (isWatched) {
-      return;
-    } else {
-      movie.markedWatchedOn = Date.now();
-      delete movie.queue;
-      watched.push(movie);
-    }
+    let watched = utils.markWatched(this.state.watched, movie)
     let movies = utils.deleteMovie(this.state.movies, movie.id);
     let snack = {open: true, message: 'Marked as watched'};
     this.setState({ watched, movies, snack });
@@ -93,14 +71,9 @@ class App extends Component {
   }
 
   handleAdd(movie) {
-    console.log('Movie to add', movie);
-    let snack = {open: true, message: 'Added to watchlist'};
-    let movies = this.state.movies;
-    let lastQueue;
-    movies.length ? lastQueue = movies[movies.length -1].queue : lastQueue = -1
-    movie.addedAt = Date.now();
-    movie.queue = lastQueue + 1;
-    movies.push(movie);
+    const movies = utils.addMovie(this.state.movies, movie)
+    const snack = {open: true, message: 'Added to watchlist'};
+    fb.addMovie(movie).then(() => console.log('Movie added'));
     this.setState({ snack, movies });
   }
 
