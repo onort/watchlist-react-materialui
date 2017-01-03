@@ -42,10 +42,18 @@ class App extends Component {
     fb.getData().then(movies => this.setState({ movies }))
   }
 
+  handleAdd(movie) {
+    const snack = {open: true, message: 'Added to watchlist'};
+    // TODO: add queue prop to movie, or create a ordering node on firebase
+    fb.addMovie(movie).then(movies => this.setState({ movies, snack }));
+  }
+
   handleDelete(id) {
-    let movies = utils.deleteMovie(this.state.movies, id);
-    let snack = {open: true, message: 'Movie deleted'};
-    this.setState({ movies, snack });
+    fb.deleteMovie(id).then(movies => {
+      console.log(`Movie with id ${id} removed from firebase database`);
+      console.log(`Setting state with data`, movies);
+      this.setState({ movies });
+    })
   }
 
   handleUp(id) {
@@ -70,12 +78,6 @@ class App extends Component {
     this.setState({ filteredMovies: filtered});
   }
 
-  handleAdd(movie) {
-    const movies = utils.addMovie(this.state.movies, movie)
-    const snack = {open: true, message: 'Added to watchlist'};
-    fb.addMovie(movie).then(() => console.log('Movie added'));
-    this.setState({ snack, movies });
-  }
 
   snackClose() {
     const snack = { open: false, message: '' }

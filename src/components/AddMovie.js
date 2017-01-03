@@ -30,7 +30,7 @@ class AddMovie extends Component {
 
   handleAdd(movie) {
     this.props.handleAdd(movie);
-    this.handleClose();
+    this.setState({ addOpen: false, results: [], query: '' }); //this.handleClose(won't work)
   }
 
   handleClick() {
