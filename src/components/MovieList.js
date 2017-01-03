@@ -11,7 +11,8 @@ const MovieList = (props) => {
             onUp={props.handleUp}
             onDown={props.handleDown}
             onWatched={props.handleWatched}
-            onGenre={props.handleGenre} />
+            onGenre={props.handleGenre}
+            showUpDown={!props.filteredMovies.length} />
   });
   
   return (

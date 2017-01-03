@@ -74,6 +74,12 @@ class AddMovie extends Component {
       dialog: {
         width: '50%',
         minWidth: '400px',
+      },
+      title: {
+        borderBottom: 'none'
+      },
+      actions: {
+        borderTop: 'none'
       }
     }
     const actions = [
@@ -81,12 +87,6 @@ class AddMovie extends Component {
         label="Cancel"
         primary={true}
         onTouchTap={this.handleClose}
-      />,
-      <FlatButton
-        label="Search"
-        primary={true}
-        keyboardFocused={true}
-        onTouchTap={this.handleQuery}
       />
     ]
     return (
@@ -98,16 +98,25 @@ class AddMovie extends Component {
         </IconButton>
         <Dialog
           title="Add to Watchlist"
+          titleStyle={styles.title}
           actions={actions}
+          actionsContainerStyle={styles.actions}
           modal={false}
           open={this.state.addOpen}
           onRequestClose={this.handleClose}
-          contentStyle={styles.dialog} >
+          contentStyle={styles.dialog}
+          autoScrollBodyContent={true}
+          >
             <TextField hintText="Search for a movie.."
               onChange={this.handleChange}
               onKeyUp={this.handleKeyUp}
+              maxLength="50"
+              fullWidth={true}
               />
-          {this.state.results.length ? <ResultsList results={this.state.results} onAdd={this.handleAdd} /> : ''}
+            <ResultsList 
+              results={this.state.results} 
+              onAdd={this.handleAdd}
+              query={this.state.query} />
         </Dialog>
       </div>
     )

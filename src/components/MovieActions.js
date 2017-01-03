@@ -46,10 +46,10 @@ const MovieActions = (props) => {
   }
   return (
     <CardActions style={styles.actions}>
-      <IconButton onTouchTap={onUp}>
+      <IconButton onTouchTap={onUp} disabled={!props.showUpDown}>
         <ArrowUp />
       </IconButton>
-      <IconButton onTouchTap={onDown}>
+      <IconButton onTouchTap={onDown} disabled={!props.showUpDown}>
         <ArrowDown />
       </IconButton>
       <IconButton onTouchTap={onWatched}>

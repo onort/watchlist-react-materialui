@@ -191,6 +191,7 @@ const Movie = (props) => {
         onBottom={handleBottom}
         onNote={handleNote}
         onWatched={handleWatched}
+        showUpDown={props.showUpDown}
         />
     </Card>
   )
