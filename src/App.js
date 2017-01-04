@@ -7,8 +7,17 @@ import AppBar from 'material-ui/AppBar';
 import FlatButton from 'material-ui/FlatButton'
 import FontIcon from 'material-ui/FontIcon';
 import Snackbar from 'material-ui/Snackbar';
+import IconMenu from 'material-ui/IconMenu';
+import MenuItem from 'material-ui/MenuItem';
+import IconButton from 'material-ui/IconButton';
+import ContentFilter from 'material-ui/svg-icons/content/filter-list';
+import Divider from 'material-ui/Divider';
+import RaisedButton from 'material-ui/RaisedButton';
+
+
 
 import AddMovie from './components/AddMovie';
+import GenreDrawer from './components/GenreDrawer';
 import Movie from './components/Movie';
 import MovieList from './components/MovieList';
 
@@ -27,7 +36,8 @@ class App extends Component {
       watched: [],
       snack: { open: false, message: '' },
       filteredMovies: [],
-      queueChange: false
+      queueChange: false,
+      drawerOpen: false
     }
   this.handleAdd = this.handleAdd.bind(this);
   this.handleDelete = this.handleDelete.bind(this);
@@ -35,8 +45,11 @@ class App extends Component {
   this.handleGenre = this.handleGenre.bind(this);
   this.handleUp = this.handleUp.bind(this);
   this.handleWatched = this.handleWatched.bind(this);
+  this.openGenreDrawer = this.openGenreDrawer.bind(this);
   this.showAll = this.showAll.bind(this);
   this.snackClose = this.snackClose.bind(this);
+  this.sortByDate = this.sortByDate.bind(this);
+  this.sortByQueue = this.sortByQueue.bind(this);
   this.updateFirebase = utils.debounce(this.updateFirebase.bind(this), 3000);
   }
 
@@ -82,10 +95,11 @@ class App extends Component {
   }
 
   handleGenre(genre) {
-    let filtered = this.state.movies.filter(movie => movie.genre_ids.includes(genre));
-    this.setState({ filteredMovies: filtered});
+    let filtered = this.state.movies.filter(movie => {
+      return movie.genre_ids ? movie.genre_ids.includes(genre) : false
+    });
+    this.setState({ filteredMovies: filtered });
   }
-
 
   snackClose() {
     const snack = { open: false, message: '' }
@@ -96,13 +110,41 @@ class App extends Component {
     this.setState({ filteredMovies: [] });
   }
 
+  sortByDate() {
+    let movies = this.state.movies.sort((a, b) => a.addedAt - b.addedAt);
+    this.setState({ movies });
+  }
+
+  sortByQueue() {
+    let movies = this.state.movies.sort((a, b) => a.queue - b.queue);
+    this.setState({ movies });
+  }
+
+  openGenreDrawer() {
+    this.setState({ drawerOpen: true });
+  }
+
   render() {
+    const menu = (
+      <div>
+        <RaisedButton label="Show Genres" onTouchTap={this.openGenreDrawer} /> 
+        <GenreDrawer open={this.state.drawerOpen} />
+        <IconMenu
+          iconButtonElement={<IconButton><ContentFilter /></IconButton>}
+        >
+          <MenuItem onTouchTap={this.showAll} primaryText="Show All" />
+          <Divider />
+          <MenuItem onTouchTap={this.sortByDate} primaryText="Sort by Date Added" />
+          <MenuItem onTouchTap={this.sortByQueue} primaryText="Sort by Queue" />
+        </IconMenu>
+      </div>
+    )
     return (
       <div>
         <AppBar title="Movie Watchlist" />
         <div style={styles.divStyle}>
           <AddMovie handleAdd={this.handleAdd} />
-          <FlatButton onTouchTap={this.showAll} label="Show All" disabled={!this.state.filteredMovies.length}/>
+          {menu}
           <MovieList movies={this.state.movies} 
             handleDelete={this.handleDelete}
             handleUp={this.handleUp}

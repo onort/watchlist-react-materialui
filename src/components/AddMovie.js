@@ -80,6 +80,9 @@ class AddMovie extends Component {
       },
       actions: {
         borderTop: 'none'
+      },
+      root: {
+        paddingTop: '5%'
       }
     }
     const actions = [
@@ -106,6 +109,8 @@ class AddMovie extends Component {
           onRequestClose={this.handleClose}
           contentStyle={styles.dialog}
           autoScrollBodyContent={true}
+          repositionOnUpdate={false}
+          style={styles.root}
           >
             <TextField hintText="Search for a movie.."
               onChange={this.handleChange}
