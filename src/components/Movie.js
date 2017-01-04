@@ -152,7 +152,7 @@ const Movie = (props) => {
     }
   }
 
-  const genres = movie.genre_ids.map(genre => {
+  const genres = movie.genre_ids ? movie.genre_ids.map(genre => {
     const genreText = genreList.find(genreInfo => genreInfo.id == genre);
     if (genreText) {
       return (
@@ -161,7 +161,7 @@ const Movie = (props) => {
         </Chip>
       );
     }
-  });
+  }) : '';
   return (
     <Card initiallyExpanded={false} style={styles.card}> 
       <CardHeader

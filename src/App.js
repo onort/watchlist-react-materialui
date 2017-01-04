@@ -26,7 +26,8 @@ class App extends Component {
       movies: [],
       watched: [],
       snack: { open: false, message: '' },
-      filteredMovies: []
+      filteredMovies: [],
+      queueChange: false
     }
   this.handleAdd = this.handleAdd.bind(this);
   this.handleDelete = this.handleDelete.bind(this);
@@ -36,6 +37,7 @@ class App extends Component {
   this.handleWatched = this.handleWatched.bind(this);
   this.showAll = this.showAll.bind(this);
   this.snackClose = this.snackClose.bind(this);
+  this.updateFirebase = utils.debounce(this.updateFirebase.bind(this), 3000);
   }
 
   componentDidMount() {
@@ -45,7 +47,7 @@ class App extends Component {
   handleAdd(movie) {
     const snack = {open: true, message: 'Added to watchlist'};
     // TODO: add queue prop to movie, or create a ordering node on firebase
-    fb.addMovie(movie).then(movies => this.setState({ movies, snack }));
+    fb.addMovie(movie, this.state.movies).then(movies => this.setState({ movies, snack }));
   }
 
   handleDelete(id) {
@@ -58,12 +60,18 @@ class App extends Component {
 
   handleUp(id) {
     let movies = utils.moveUp(this.state.movies, id);
-    this.setState({ movies });
+    this.setState({ movies, queueChange: true });
+    this.updateFirebase(movies);
   }
 
   handleDown(id) {
     let movies = utils.moveDown(this.state.movies, id);
-    this.setState({ movies });
+    this.setState({ movies, queueChange: true });
+    this.updateFirebase(movies);
+  }
+
+  updateFirebase() {
+    if (this.state.queueChange) fb.update(this.state.movies).then(() => this.setState({ queueChange: false }));
   }
 
   handleWatched(movie) {
