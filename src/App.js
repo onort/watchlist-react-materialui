@@ -4,15 +4,15 @@ import * as utils from './utils';
 import * as fb from './api/firebaseApi';
 
 import AppBar from 'material-ui/AppBar';
+import Divider from 'material-ui/Divider';
 import FlatButton from 'material-ui/FlatButton'
 import FontIcon from 'material-ui/FontIcon';
-import Snackbar from 'material-ui/Snackbar';
+import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
-import IconButton from 'material-ui/IconButton';
-import ContentFilter from 'material-ui/svg-icons/content/filter-list';
-import Divider from 'material-ui/Divider';
 import RaisedButton from 'material-ui/RaisedButton';
+import Snackbar from 'material-ui/Snackbar';
+import SortIcon from 'material-ui/svg-icons/content/sort';
 
 
 
@@ -124,13 +124,17 @@ class App extends Component {
     this.setState({ drawerOpen: true });
   }
 
+  closeDrawer() {
+    this.setState({ drawerOpen: false });
+  }
+
   render() {
     const menu = (
       <div>
         <RaisedButton label="Show Genres" onTouchTap={this.openGenreDrawer} /> 
-        <GenreDrawer open={this.state.drawerOpen} />
+        <GenreDrawer openDrawer={this.state.drawerOpen} movies={this.state.movies} closeDrawer={this.closeDrawer.bind(this)} />
         <IconMenu
-          iconButtonElement={<IconButton><ContentFilter /></IconButton>}
+          iconButtonElement={<IconButton><SortIcon /></IconButton>}
         >
           <MenuItem onTouchTap={this.showAll} primaryText="Show All" />
           <Divider />

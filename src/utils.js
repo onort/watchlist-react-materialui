@@ -62,3 +62,19 @@ export function debounce(fn, delay) {
     }, delay);
   };
 }
+
+export function createGenreListWithCount(movies) {
+  // this should run if movie added or deleted or marked watched
+  let genreList = [];
+  movies.forEach(movie => {
+    if(movie.genre_ids) {
+      movie.genre_ids.forEach(genreId => genreList.push(genreId));
+    }
+  });
+  let genreListWithCount = genreList.reduce((list, genreId) => {
+    if(!list[genreId]) list[genreId] = 0;
+    list[genreId]++;
+    return list;
+  }, {});
+  return genreListWithCount;
+}
