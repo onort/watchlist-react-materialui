@@ -5,6 +5,7 @@ import * as fb from './api/firebaseApi';
 
 import AppBar from 'material-ui/AppBar';
 import Divider from 'material-ui/Divider';
+import Downward from 'material-ui/svg-icons/navigation/arrow-downward';
 import FlatButton from 'material-ui/FlatButton'
 import FontIcon from 'material-ui/FontIcon';
 import IconButton from 'material-ui/IconButton';
@@ -13,6 +14,7 @@ import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
 import Snackbar from 'material-ui/Snackbar';
 import SortIcon from 'material-ui/svg-icons/content/sort';
+import Upward from 'material-ui/svg-icons/navigation/arrow-upward';
 
 import AddMovie from './components/AddMovie';
 import GenreDrawer from './components/GenreDrawer';
@@ -42,12 +44,9 @@ class App extends Component {
   this.handleDown = this.handleDown.bind(this);
   this.handleGenre = this.handleGenre.bind(this);
   this.handleUp = this.handleUp.bind(this);
-  this.handleWatched = this.handleWatched.bind(this);
   this.openGenreDrawer = this.openGenreDrawer.bind(this);
   this.showAll = this.showAll.bind(this);
   this.snackClose = this.snackClose.bind(this);
-  this.sortByDate = this.sortByDate.bind(this);
-  this.sortByQueue = this.sortByQueue.bind(this);
   this.updateFirebase = utils.debounce(this.updateFirebase.bind(this), 3000);
   }
 
@@ -57,39 +56,27 @@ class App extends Component {
 
   handleAdd(movie) {
     const snack = {open: true, message: 'Added to watchlist'};
-    // TODO: add queue prop to movie, or create a ordering node on firebase
     fb.addMovie(movie, this.state.movies).then(movies => this.setState({ movies, snack }));
   }
 
   handleDelete(id) {
-    fb.deleteMovie(id).then(movies => {
-      console.log(`Movie with id ${id} removed from firebase database`);
-      console.log(`Setting state with data`, movies);
-      this.setState({ movies });
-    })
+    fb.deleteMovie(id, this.state.movies).then(movies => this.setState({ movies }));
   }
 
   handleUp(id) {
-    let movies = utils.moveUp(this.state.movies, id);
+    const movies = utils.moveUp(this.state.movies, id);
     this.setState({ movies, queueChange: true });
     this.updateFirebase(movies);
   }
 
   handleDown(id) {
-    let movies = utils.moveDown(this.state.movies, id);
+    const movies = utils.moveDown(this.state.movies, id);
     this.setState({ movies, queueChange: true });
     this.updateFirebase(movies);
   }
 
   updateFirebase() {
     if (this.state.queueChange) fb.update(this.state.movies).then(() => this.setState({ queueChange: false }));
-  }
-
-  handleWatched(movie) {
-    let watched = utils.markWatched(this.state.watched, movie)
-    let movies = utils.deleteMovie(this.state.movies, movie.id);
-    let snack = {open: true, message: 'Marked as watched'};
-    this.setState({ watched, movies, snack });
   }
 
   handleGenre(genre) {
@@ -108,13 +95,13 @@ class App extends Component {
     this.setState({ filteredMovies: [] });
   }
 
-  sortByDate() {
-    let movies = this.state.movies.sort((a, b) => a.addedAt - b.addedAt);
+  sortByDate(direction) {
+    let movies = this.state.movies.sort((a, b) => direction * (a.addedAt - b.addedAt));
     this.setState({ movies });
   }
 
-  sortByQueue() {
-    let movies = this.state.movies.sort((a, b) => a.queue - b.queue);
+  sortByQueue(direction) {
+    let movies = this.state.movies.sort((a, b) => direction * (a.queue - b.queue));
     this.setState({ movies });
   }
 
@@ -129,6 +116,7 @@ class App extends Component {
   render() {
     const menu = (
       <div>
+        <AddMovie handleAdd={this.handleAdd} />
         <RaisedButton label="Show Genres" onTouchTap={this.openGenreDrawer} /> 
         <GenreDrawer 
           openDrawer={this.state.drawerOpen} 
@@ -139,10 +127,21 @@ class App extends Component {
         <IconMenu
           iconButtonElement={<IconButton><SortIcon /></IconButton>}
         >
-          <MenuItem onTouchTap={this.showAll} primaryText="Show All" />
+          <MenuItem primaryText="Sort by" />
           <Divider />
-          <MenuItem onTouchTap={this.sortByDate} primaryText="Sort by Date Added" />
-          <MenuItem onTouchTap={this.sortByQueue} primaryText="Sort by Queue" />
+          <MenuItem onTouchTap={this.sortByDate.bind(this, -1)} 
+            primaryText="Date Added"
+            rightIcon={<Downward />} />
+          <MenuItem onTouchTap={this.sortByDate.bind(this, 1)} 
+            primaryText="Date Added"
+            rightIcon={<Upward />} />
+          <Divider />
+          <MenuItem onTouchTap={this.sortByQueue.bind(this, 1)} 
+            primaryText="Queue"
+            rightIcon={<Downward />} />
+          <MenuItem onTouchTap={this.sortByQueue.bind(this, -1)} 
+            primaryText="Queue"
+            rightIcon={<Upward />} />
         </IconMenu>
       </div>
     )
@@ -150,13 +149,11 @@ class App extends Component {
       <div>
         <AppBar title="Movie Watchlist" />
         <div style={styles.divStyle}>
-          <AddMovie handleAdd={this.handleAdd} />
           {menu}
           <MovieList movies={this.state.movies} 
             handleDelete={this.handleDelete}
             handleUp={this.handleUp}
             handleDown={this.handleDown}
-            handleWatched={this.handleWatched}
             handleGenre={this.handleGenre}
             filteredMovies={this.state.filteredMovies}
             />

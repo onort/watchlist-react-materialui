@@ -38,12 +38,6 @@ const MovieActions = (props) => {
   const onBottom = () => {
     props.onBottom();
   };
-  const onNote = () => {
-    props.onNote();
-  };
-  const onWatched = () => {
-    props.onWatched();
-  }
   return (
     <CardActions style={styles.actions}>
       <IconButton onTouchTap={onUp} disabled={!props.showUpDown}>
@@ -51,9 +45,6 @@ const MovieActions = (props) => {
       </IconButton>
       <IconButton onTouchTap={onDown} disabled={!props.showUpDown}>
         <ArrowDown />
-      </IconButton>
-      <IconButton onTouchTap={onWatched}>
-        <Watched />
       </IconButton>
       <IconButton onTouchTap={onDelete}>
           <DeleteIcon />
@@ -65,7 +56,6 @@ const MovieActions = (props) => {
       >
         <MenuItem onTouchTap={onTop} primaryText="Move to Top" />
         <MenuItem onTouchTap={onBottom} primaryText="Move to Bottom" />
-        <MenuItem onTouchTap={onNote} primaryText="Add Note" />
       </IconMenu>
       <div style={styles.right}>
         <IconButton tooltipPosition="bottom-center" tooltip="Add Note" disabled>

@@ -10,7 +10,6 @@ const MovieList = (props) => {
             onDelete={props.handleDelete}
             onUp={props.handleUp}
             onDown={props.handleDown}
-            onWatched={props.handleWatched}
             onGenre={props.handleGenre}
             showUpDown={!props.filteredMovies.length} />
   });

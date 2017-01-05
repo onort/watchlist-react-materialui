@@ -32,17 +32,20 @@ export const addMovie = (movie, moviesState) => {
   });
 }
 
-export const deleteMovie = (id) => {
+export const deleteMovie = (id, moviesState) => {
   return new Promise(resolve => {
     const delQuery = userMoviesRef.orderByChild('id').equalTo(id);
+    const movieToDelete = moviesState.find(movie => movie.id === id)
+    moviesState.forEach(movie => {
+      if (movie.queue > movieToDelete.queue) movie.queue--;
+    });
     delQuery.on('child_added', snap => snap.ref.remove());
-    getData().then(movies => resolve(movies));
+    update(moviesState).then(getData().then(movies => resolve(movies)));
   });
 }
 
 export const update = (movies) => {
   return new Promise(resolve => {
-    console.log('Debounced, updating firebase with movies data', movies)
     userMoviesRef.set(movies).then(resolve());
   });
 }

@@ -33,13 +33,6 @@ const Movie = (props) => {
   const handleBottom = () => {
     console.log('Bottom clicked!')
   };
-  const handleNote = () => {
-    console.log('Note clicked!')
-  };
-  const handleWatched = () => {
-    const checkConfirm = confirm(`Are you sure you want to mark ${movie.original_title} as watched?`);
-    checkConfirm && props.onWatched(movie);
-  }
 
   const styles = {
     header: {
@@ -87,7 +80,7 @@ const Movie = (props) => {
     }
   }) : '';
   return (
-    <Card initiallyExpanded={false} style={styles.card}> 
+    <Card initiallyExpanded={true} style={styles.card}> 
       <CardHeader
         title={movie.original_title}
         subtitle={date}
@@ -113,8 +106,6 @@ const Movie = (props) => {
         onDown={handleDown}
         onTop={handleTop}
         onBottom={handleBottom}
-        onNote={handleNote}
-        onWatched={handleWatched}
         showUpDown={props.showUpDown}
         />
     </Card>
