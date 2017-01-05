@@ -1,6 +1,7 @@
 import React from 'react';
 
 import Badge from 'material-ui/Badge';
+import Divider from 'material-ui/Divider';
 import Drawer from 'material-ui/Drawer';
 import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
@@ -10,6 +11,14 @@ import genreIdsInfo from '../genreIds';
 
 const GenreDrawer = (props) => {
   const handleClose = () => props.closeDrawer();
+  const handleGenreClick = (id) => {
+    props.filterGenre(parseInt(id));
+    props.closeDrawer();
+  }
+  const showAll = () => {
+    props.showAll();
+    props.closeDrawer();
+  }
   const styles = {
     menu: {
       position: 'relative',
@@ -23,7 +32,11 @@ const GenreDrawer = (props) => {
     let info = genreIdsInfo.find(genreIdInfo => genreIdInfo.id == prop)
     genreListWithCount[info.name] = genreListWithCount[prop]
     delete genreListWithCount[prop];
-    realGenreList.push(<MenuItem key={prop}>{info.name} <strong>{genreListWithCount[info.name]}</strong></MenuItem>)
+    realGenreList.push(
+      <MenuItem key={prop} onTouchTap={handleGenreClick.bind(this, prop)} >
+        {info.name} <strong>{genreListWithCount[info.name]}</strong>
+        </MenuItem>
+      );
   }
   return (
     <Drawer
@@ -33,6 +46,8 @@ const GenreDrawer = (props) => {
       onRequestChange={handleClose}
     >
       <Menu style={styles.menu}>
+        <MenuItem key={0} onTouchTap={showAll}>Show All</MenuItem>
+        <Divider />
         {realGenreList}
       </Menu>
     </Drawer>

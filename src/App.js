@@ -14,8 +14,6 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Snackbar from 'material-ui/Snackbar';
 import SortIcon from 'material-ui/svg-icons/content/sort';
 
-
-
 import AddMovie from './components/AddMovie';
 import GenreDrawer from './components/GenreDrawer';
 import Movie from './components/Movie';
@@ -132,7 +130,12 @@ class App extends Component {
     const menu = (
       <div>
         <RaisedButton label="Show Genres" onTouchTap={this.openGenreDrawer} /> 
-        <GenreDrawer openDrawer={this.state.drawerOpen} movies={this.state.movies} closeDrawer={this.closeDrawer.bind(this)} />
+        <GenreDrawer 
+          openDrawer={this.state.drawerOpen} 
+          movies={this.state.movies} 
+          closeDrawer={this.closeDrawer.bind(this)}
+          filterGenre={this.handleGenre}
+          showAll={this.showAll} />
         <IconMenu
           iconButtonElement={<IconButton><SortIcon /></IconButton>}
         >

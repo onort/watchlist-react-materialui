@@ -17,7 +17,8 @@ const Movie = (props) => {
     props.onGenre(genre);
   };
   const handleDelete = () => {
-    props.onDelete(movie.id);
+    const checkConfirm = confirm(`Are you sure you want to delete ${movie.original_title} from your watchlist?`);
+    checkConfirm && props.onDelete(movie.id);
   };
 
   const handleUp = () => {
@@ -36,7 +37,8 @@ const Movie = (props) => {
     console.log('Note clicked!')
   };
   const handleWatched = () => {
-    props.onWatched(movie);
+    const checkConfirm = confirm(`Are you sure you want to mark ${movie.original_title} as watched?`);
+    checkConfirm && props.onWatched(movie);
   }
 
   const styles = {
