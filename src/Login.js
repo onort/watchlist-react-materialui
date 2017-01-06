@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import isEmail from 'validator/lib/isEmail';
 import isEmpty from 'validator/lib/isEmpty';
 
+import { authUser, createUser } from './api/firebaseApi';
+import { validateCreds } from './utils';
+
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 import {Tabs, Tab} from 'material-ui/Tabs';
@@ -30,30 +33,32 @@ class Login extends Component {
     this.handleLogin = this.handleLogin.bind(this);
     this.handleRegister = this.handleRegister.bind(this);
     this.state = {
-      emailError: '',
-      passError: ''
+      errors: {
+        emailError: '',
+        passError: ''
+      }
     }
   }
 
   handleLogin(e) {
     e.preventDefault();
-    // TODO: Create a check function in utils and send email, password which may return an object containing error messages to update state(nested).
-    if(!isEmail(this.refs.loginEmail.getValue()) || isEmpty(this.refs.loginEmail.getValue())) {
-      this.setState({ emailError: "Please enter a valid email address"});
-      return;
-    }
-    if(isEmpty(this.refs.loginPass.getValue())) {
-      this.setState({ passError: "Please enter your password"});
-      return;
-    }
-    this.setState({ emailError: '', passError: ''})
-    console.log(`Email: ${this.refs.loginEmail.getValue()}, Password: ${this.refs.loginPass.getValue()}, isEmail:${isEmail(this.refs.loginEmail.getValue())}`);
+    const email = this.refs.loginEmail.getValue(), pass = this.refs.loginPass.getValue();
+    const errors = validateCreds(email, pass);
+    this.setState({ errors });
+    if (errors.emailError == '' && errors.passError == '') this.props.handleLogin(email, pass);
   }
 
   handleRegister(e) {
-    console.log('Register clicked')
     e.preventDefault();
-    console.log(`Email: ${this.refs.regEmail.getValue()}, Password: ${this.refs.regPass.getValue()}, Password Confirmation: ${this.refs.regPass2.getValue()}`);
+    const email = this.refs.regEmail.getValue(), 
+          pass = this.refs.regPass.getValue(), 
+          pass2 = this.refs.regPass2.getValue();
+    const errors = validateCreds(email, pass, pass2);
+    this.setState({ errors });
+    if (errors.emailError == '' && errors.passError == '') this.props.handleRegister(email, pass);
+    // createUser(email, pass)
+    //   .then(user => authUser(email, pass))
+    //   .catch(err => console.log(err))
   }
 
   render() {
@@ -65,14 +70,14 @@ class Login extends Component {
             <TextField
               hintText="E-mail"
               ref="loginEmail"
-              errorText={this.state.emailError}
+              errorText={this.state.errors.emailError}
             /><br />
             <TextField
               hintText="Password"
               floatingLabelText="Password"
               type="password"
               ref="loginPass"
-              errorText={this.state.passError}
+              errorText={this.state.errors.passError}
             /><br />
             <RaisedButton label="Login" style={styles.button} 
               primary={true} onTouchTap={this.handleLogin} />
@@ -84,7 +89,7 @@ class Login extends Component {
             <TextField
               hintText="E-mail"
               floatingLabelText="E-mail"
-              errorText={this.state.emailError}
+              errorText={this.state.errors.emailError}
               type="email"
               ref="regEmail"
             /><br />
@@ -93,12 +98,14 @@ class Login extends Component {
               floatingLabelText="Password"
               type="password"
               ref="regPass"
+              errorText={this.state.errors.passError}
             /><br />
             <TextField
               hintText="Confirm Password"
               floatingLabelText="Confirm Password"
               type="password"
               ref="regPass2"
+              errorText={this.state.errors.passError}
             /><br />
             <RaisedButton label="Register" style={styles.button} 
               primary={true} onTouchTap={this.handleRegister} />

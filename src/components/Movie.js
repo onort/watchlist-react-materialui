@@ -92,11 +92,10 @@ const Movie = (props) => {
       );
     }
   }) : '';
-  console.log('Moment: ', moment(movie.addedAt).from());
   return (
     <div style={styles.root}>
     <FloatingActionButton style={styles.queue} backgroundColor="#e2e2e2" zDepth={1}>
-      #{movie.queue}
+      #{movie.queue + 1}
     </FloatingActionButton>
     <Card initiallyExpanded={true} style={styles.card}>
       <CardHeader

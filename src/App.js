@@ -18,6 +18,7 @@ import Upward from 'material-ui/svg-icons/navigation/arrow-upward';
 
 import AddMovie from './components/AddMovie';
 import GenreDrawer from './components/GenreDrawer';
+import Login from './Login';
 import Movie from './components/Movie';
 import MovieList from './components/MovieList';
 
@@ -37,12 +38,15 @@ class App extends Component {
       snack: { open: false, message: '' },
       filteredMovies: [],
       queueChange: false,
-      drawerOpen: false
+      drawerOpen: false,
+      user: null
     }
   this.handleAdd = this.handleAdd.bind(this);
   this.handleDelete = this.handleDelete.bind(this);
   this.handleDown = this.handleDown.bind(this);
   this.handleGenre = this.handleGenre.bind(this);
+  this.handleLogin = this.handleLogin.bind(this);
+  this.handleRegister = this.handleRegister.bind(this);
   this.handleUp = this.handleUp.bind(this);
   this.openGenreDrawer = this.openGenreDrawer.bind(this);
   this.showAll = this.showAll.bind(this);
@@ -52,6 +56,24 @@ class App extends Component {
 
   componentDidMount() {
     fb.getData().then(movies => this.setState({ movies }))
+  }
+
+  handleLogin(email, pass) {
+    fb.authUser(email, pass)
+      .then(user => {
+        console.log(`User uid: ${user.uid}, user email: ${user.email}`, user);
+        this.setState({ user })
+      })
+      .catch(err => console.log(err)); // show error message
+  }
+
+  handleRegister(email, pass) {
+    fb.createUser(email,pass)
+      .then(user => {
+        console.log(`Created user with uid: ${user.uid}`, user);
+        this.setState({ user })
+      })
+      .catch(err => console.log(err));
   }
 
   handleAdd(movie) {
@@ -132,25 +154,26 @@ class App extends Component {
         >
           <MenuItem primaryText="Sort by" />
           <Divider />
-          <MenuItem onTouchTap={this.sortByDate.bind(this, -1)} 
-            primaryText="Date Added"
-            rightIcon={<Downward />} />
-          <MenuItem onTouchTap={this.sortByDate.bind(this, 1)} 
-            primaryText="Date Added"
-            rightIcon={<Upward />} />
-          <Divider />
           <MenuItem onTouchTap={this.sortByQueue.bind(this, 1)} 
             primaryText="Queue"
             rightIcon={<Downward />} />
           <MenuItem onTouchTap={this.sortByQueue.bind(this, -1)} 
             primaryText="Queue"
             rightIcon={<Upward />} />
+          <Divider />
+          <MenuItem onTouchTap={this.sortByDate.bind(this, -1)} 
+            primaryText="Date Added"
+            rightIcon={<Downward />} />
+          <MenuItem onTouchTap={this.sortByDate.bind(this, 1)} 
+            primaryText="Date Added"
+            rightIcon={<Upward />} />
         </IconMenu>
       </div>
     )
-    return (
+    return this.state.user ? (
       <div>
         <AppBar title="Movie Watchlist" />
+        {this.state.user && <h3>Logged in</h3>}
         <div style={styles.divStyle}>
           {menu}
           <MovieList movies={this.state.movies} 
@@ -168,7 +191,8 @@ class App extends Component {
           onRequestClose={this.snackClose}
         />
       </div>
-    )
+    ) :
+     <Login handleLogin={this.handleLogin} handleRegister={this.handleRegister} />
   }
 }
 

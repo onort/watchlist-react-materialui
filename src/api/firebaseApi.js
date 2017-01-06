@@ -3,6 +3,7 @@ import {fbConfig} from './config';
 
 firebase.initializeApp(fbConfig);
 
+export const auth = firebase.auth();
 const dbRef = firebase.database().ref();
 const userId = 'firstUser';
 const userMoviesRef = dbRef.child(userId).child('watchList');
@@ -49,3 +50,31 @@ export const update = (movies) => {
     userMoviesRef.set(movies).then(resolve());
   });
 }
+
+export const authUser = (email, pass) => {
+  return new Promise((resolve, reject) => {
+    auth.signInWithEmailAndPassword(email, pass)
+      .then(user => resolve(auth.currentUser))
+      .catch(err => reject(err));
+  });
+}
+
+export const createUser = (email, pass) => {
+  return new Promise((resolve, reject) => {
+    auth.createUserWithEmailAndPassword(email, pass)
+      .then(user => {
+        const userInfo = auth.currentUser;
+        dbRef.child(userInfo.uid).set({ watchList: '' });
+        resolve(userInfo);
+    })
+      .catch(err => reject(err));
+  });
+}
+
+export const unAuth = () => {
+  auth.signOut();
+}
+
+auth.onAuthStateChanged(user => {
+  if(user) user;
+}) 

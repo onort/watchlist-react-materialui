@@ -7,7 +7,6 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
 import App from './App';
-import Login from './Login';
 
 injectTapEventPlugin()
 
@@ -21,11 +20,9 @@ const muiTheme = getMuiTheme({
   },
 });
 
-const render = (1 == 2) ? <Login /> : <App />
-
 ReactDOM.render(
   <MuiThemeProvider muiTheme={muiTheme}>
-    {render}
+    <App />
   </MuiThemeProvider>,
   document.querySelector('#app')
 );

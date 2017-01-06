@@ -1,3 +1,6 @@
+import isEmail from 'validator/lib/isEmail';
+import isEmpty from 'validator/lib/isEmpty';
+
 // TODO: refactor moveUp and moveDown to a single move function with an additional direction argument like +1, -1 or a string with a switch statement
 export function moveUp(movies, id) {
   let index = movies.findIndex(movie => movie.id === id);
@@ -40,4 +43,12 @@ export function createGenreListWithCount(movies) {
     return list;
   }, {});
   return genreListWithCount;
+}
+
+export function validateCreds(email, pass, pass2) {
+  let errors = { emailError: '', passError: '' };
+  if (isEmpty(email) || !isEmail(email)) errors.emailError = 'Please enter a valid email address';
+  if (isEmpty(pass)) errors.passError = 'Please enter your password';
+  if (pass2 && pass !== pass2) errors.passError = 'Passwords do not match';
+  return errors;
 }
