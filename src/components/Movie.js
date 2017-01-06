@@ -1,8 +1,11 @@
 import React from 'react';
+import moment from 'moment';
 
+import AddedAt from 'material-ui/svg-icons/content/add-circle-outline';
 import {Card, CardHeader, CardMedia, CardText} from 'material-ui/Card';
 import Chip from 'material-ui/Chip';
 import FlatButton from 'material-ui/FlatButton';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
 import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
 import Popover from 'material-ui/Popover';
@@ -66,6 +69,16 @@ const Movie = (props) => {
     },
     chip: {
       margin: 4 + 'px',
+    },
+    queue: {
+      position: 'absolute',
+      left: '-72px',
+      top: '48px',
+      fontSize: '20px',
+      color: 'rgba(66, 66, 66, .87)'
+    },
+    root: {
+      position: 'relative'
     }
   }
 
@@ -79,8 +92,13 @@ const Movie = (props) => {
       );
     }
   }) : '';
+  console.log('Moment: ', moment(movie.addedAt).from());
   return (
-    <Card initiallyExpanded={true} style={styles.card}> 
+    <div style={styles.root}>
+    <FloatingActionButton style={styles.queue} backgroundColor="#e2e2e2" zDepth={1}>
+      #{movie.queue}
+    </FloatingActionButton>
+    <Card initiallyExpanded={true} style={styles.card}>
       <CardHeader
         title={movie.original_title}
         subtitle={date}
@@ -94,6 +112,7 @@ const Movie = (props) => {
         <img style={styles.media} src={`https://image.tmdb.org/t/p/w185/${movie.poster_path}`} />
         <div style={styles.desc}>
           <p>{movie.overview}</p>
+          <p><AddedAt /> {moment(movie.addedAt).from()}</p>
           <div style={styles.chipWrap}>
             {genres}
           </div>
@@ -109,6 +128,7 @@ const Movie = (props) => {
         showUpDown={props.showUpDown}
         />
     </Card>
+    </div>
   )
 }
 

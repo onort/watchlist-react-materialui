@@ -21,7 +21,7 @@ const muiTheme = getMuiTheme({
   },
 });
 
-const render = (1 == 1) ? <Login /> : <App />
+const render = (1 == 2) ? <Login /> : <App />
 
 ReactDOM.render(
   <MuiThemeProvider muiTheme={muiTheme}>

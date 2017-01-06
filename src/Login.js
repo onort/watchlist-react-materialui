@@ -11,6 +11,7 @@ const styles = {
   root: {
     height: '50%',
     width: '50%',
+    maxWidth: '500px',
     margin: '10% auto'
   },
   tab: {
@@ -72,7 +73,7 @@ class Login extends Component {
               type="password"
               ref="loginPass"
               errorText={this.state.passError}
-            />
+            /><br />
             <RaisedButton label="Login" style={styles.button} 
               primary={true} onTouchTap={this.handleLogin} />
 
@@ -92,13 +93,13 @@ class Login extends Component {
               floatingLabelText="Password"
               type="password"
               ref="regPass"
-            />
+            /><br />
             <TextField
               hintText="Confirm Password"
               floatingLabelText="Confirm Password"
               type="password"
               ref="regPass2"
-            />
+            /><br />
             <RaisedButton label="Register" style={styles.button} 
               primary={true} onTouchTap={this.handleRegister} />
           </form>

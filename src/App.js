@@ -60,7 +60,10 @@ class App extends Component {
   }
 
   handleDelete(id) {
-    fb.deleteMovie(id, this.state.movies).then(movies => this.setState({ movies }));
+    fb.deleteMovie(id, this.state.movies).then(movies => {
+      const filteredMovies = this.state.filteredMovies.filter(movie => movie.id !== id)
+      this.setState({ movies, filteredMovies })
+    });
   }
 
   handleUp(id) {
