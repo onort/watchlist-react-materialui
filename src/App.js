@@ -55,14 +55,14 @@ class App extends Component {
   }
 
   componentDidMount() {
-    fb.getData().then(movies => this.setState({ movies }))
+    if (this.state.user) fb.getData().then(movies => this.setState({ movies }));
   }
 
   handleLogin(email, pass) {
     fb.authUser(email, pass)
       .then(user => {
-        console.log(`User uid: ${user.uid}, user email: ${user.email}`, user);
-        this.setState({ user })
+        this.setState({ user });
+        fb.getData().then(movies => this.setState({ movies }));
       })
       .catch(err => console.log(err)); // show error message
   }
@@ -78,14 +78,18 @@ class App extends Component {
 
   handleAdd(movie) {
     const snack = {open: true, message: 'Added to watchlist'};
-    fb.addMovie(movie, this.state.movies).then(movies => this.setState({ movies, snack }));
+    fb.addMovie(movie, this.state.movies).then(movies => this.setState({ movies, snack }))
+                                         .catch(err => console.log(err)); // TODO: Handle Error
   }
 
   handleDelete(id) {
-    fb.deleteMovie(id, this.state.movies).then(movies => {
-      const filteredMovies = this.state.filteredMovies.filter(movie => movie.id !== id)
-      this.setState({ movies, filteredMovies })
-    });
+    fb.deleteMovie(id, this.state.movies)
+      .then(movies => {
+        const filteredMovies = this.state.filteredMovies.filter(movie => movie.id !== id)
+        this.setState({ movies, filteredMovies })
+      })
+      .catch(err => console.log(err)); // TODO: Handle Error
+
   }
 
   handleUp(id) {
@@ -173,7 +177,6 @@ class App extends Component {
     return this.state.user ? (
       <div>
         <AppBar title="Movie Watchlist" />
-        {this.state.user && <h3>Logged in</h3>}
         <div style={styles.divStyle}>
           {menu}
           <MovieList movies={this.state.movies} 

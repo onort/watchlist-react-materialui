@@ -3,10 +3,14 @@ import {fbConfig} from './config';
 
 firebase.initializeApp(fbConfig);
 
-export const auth = firebase.auth();
+const auth = firebase.auth();
 const dbRef = firebase.database().ref();
-const userId = 'firstUser';
-const userMoviesRef = dbRef.child(userId).child('watchList');
+let userId;
+let userMoviesRef;
+
+function setRefs(uid) {
+  userMoviesRef = dbRef.child(uid).child('watchList');
+}
 
 export const getData = () => {
   return new Promise((resolve, reject) => {
@@ -24,24 +28,26 @@ export const getData = () => {
 }
 
 export const addMovie = (movie, moviesState) => {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     let lastQueue;
     moviesState.length ? lastQueue = moviesState[moviesState.length -1].queue : lastQueue = -1
     movie.addedAt = Date.now();
     movie.queue = lastQueue + 1;
-    userMoviesRef.push(movie).then(getData().then(movies => resolve(movies)));
+    userMoviesRef.push(movie).then(getData().then(movies => resolve(movies)))
+                             .catch(err => reject(err));
   });
 }
 
 export const deleteMovie = (id, moviesState) => {
-  return new Promise(resolve => {
+  return new Promise((resolve, reject) => {
     const delQuery = userMoviesRef.orderByChild('id').equalTo(id);
     const movieToDelete = moviesState.find(movie => movie.id === id)
     moviesState.forEach(movie => {
       if (movie.queue > movieToDelete.queue) movie.queue--;
     });
     delQuery.on('child_added', snap => snap.ref.remove());
-    update(moviesState).then(getData().then(movies => resolve(movies)));
+    update(moviesState).then(getData().then(movies => resolve(movies)))
+                       .catch(err => reject(err));
   });
 }
 
@@ -54,7 +60,11 @@ export const update = (movies) => {
 export const authUser = (email, pass) => {
   return new Promise((resolve, reject) => {
     auth.signInWithEmailAndPassword(email, pass)
-      .then(user => resolve(auth.currentUser))
+      .then(user => {
+        let userUID = auth.currentUser.uid;
+        setRefs(userUID);
+        resolve(auth.currentUser);
+      })
       .catch(err => reject(err));
   });
 }
@@ -73,6 +83,7 @@ export const createUser = (email, pass) => {
 
 export const unAuth = () => {
   auth.signOut();
+  userId = null, userMoviesRef = null;
 }
 
 auth.onAuthStateChanged(user => {
