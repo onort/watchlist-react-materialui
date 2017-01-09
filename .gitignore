@@ -2,3 +2,7 @@
 /mockData
 todos.md
 /src/api/config.js
+/dist/bundle.js
+/dist/bundle.js.gz
+/dist/bundle.js.map
+/dist/statistics.html
