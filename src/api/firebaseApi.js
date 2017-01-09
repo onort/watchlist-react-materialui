@@ -56,6 +56,18 @@ export const update = (movies) => {
   });
 }
 
+export const getAuth = () => {
+  return new Promise((resolve, reject) => {
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        setRefs(user.uid);
+        resolve(user);
+      }
+      reject();
+    });
+  })
+}
+
 export const authUser = (email, pass) => {
   return new Promise((resolve, reject) => {
     auth.signInWithEmailAndPassword(email, pass)
@@ -84,7 +96,3 @@ export const unAuth = () => {
   auth.signOut();
   userMoviesRef = null;
 }
-
-auth.onAuthStateChanged(user => {
-  if(user) user;
-}) 

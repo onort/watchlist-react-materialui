@@ -16,6 +16,9 @@ import Snackbar from 'material-ui/Snackbar';
 import SortIcon from 'material-ui/svg-icons/content/sort';
 import Upward from 'material-ui/svg-icons/navigation/arrow-upward';
 
+import CircularProgress from 'material-ui/CircularProgress';
+import Label from 'material-ui/svg-icons/action/label-outline';
+
 import AddMovie from './components/AddMovie';
 import GenreDrawer from './components/GenreDrawer';
 import Login from './Login';
@@ -26,6 +29,12 @@ const styles = {
   divStyle : {
   maxWidth: 600 + 'px',
   margin: `0 auto`
+  },
+  progress: {
+    position: 'absolute',
+    marginLeft: '50%',
+    marginTop: '10%',
+    left: '-40px',
   }
 }
 
@@ -39,13 +48,14 @@ class App extends Component {
       filteredMovies: [],
       queueChange: false,
       drawerOpen: false,
-      user: null
+      loading: true
     }
   this.handleAdd = this.handleAdd.bind(this);
   this.handleDelete = this.handleDelete.bind(this);
   this.handleDown = this.handleDown.bind(this);
   this.handleGenre = this.handleGenre.bind(this);
   this.handleLogin = this.handleLogin.bind(this);
+  this.handleLogout = this.handleLogout.bind(this);
   this.handleRegister = this.handleRegister.bind(this);
   this.handleUp = this.handleUp.bind(this);
   this.openGenreDrawer = this.openGenreDrawer.bind(this);
@@ -55,7 +65,10 @@ class App extends Component {
   }
 
   componentDidMount() {
-    if (this.state.user) fb.getData().then(movies => this.setState({ movies }));
+    fb.getAuth().then(user => {
+      this.setState({ user });
+      if (this.state.user) fb.getData().then(movies => this.setState({ movies, loading:false }));
+    }).catch(() => this.setState({ loading: false}));
   }
 
   handleLogin(email, pass) {
@@ -65,6 +78,11 @@ class App extends Component {
         fb.getData().then(movies => this.setState({ movies }));
       })
       .catch(err => console.log(err)); // show error message
+  }
+
+  handleLogout() {
+    fb.unAuth(),
+    this.setState({ user: null });
   }
 
   handleRegister(email, pass) {
@@ -99,7 +117,7 @@ class App extends Component {
       });
 
   }
-  // recieves movie now should send movies, movie, direction
+  
   handleUp(movieToMove) {
     const movies = utils.moveMovie(this.state.movies, movieToMove, -1);
     this.setState({ movies, queueChange: true });
@@ -182,9 +200,12 @@ class App extends Component {
         </IconMenu>
       </div>
     )
-    return this.state.user ? (
+    const render = this.state.user ? (
       <div>
-        <AppBar title="Movie Watchlist" />
+        <AppBar title="Watchlist"
+          iconElementLeft={<IconButton onTouchTap={this.openGenreDrawer}><Label /></IconButton>} 
+          iconElementRight={<FlatButton label="Logout" onTouchTap={this.handleLogout}/>}
+           />
         <div style={styles.divStyle}>
           {menu}
           <MovieList movies={this.state.movies} 
@@ -204,6 +225,7 @@ class App extends Component {
       </div>
     ) :
      <Login handleLogin={this.handleLogin} handleRegister={this.handleRegister} />
+    return this.state.loading ? <CircularProgress style={styles.progress} size={80} thickness={5} /> : render;
   }
 }
 

@@ -6,7 +6,6 @@ const baseUrl = `https://api.themoviedb.org/3/search/movie?api_key=${TMDbApiKey}
 const movieApi = {
   searchMovie(query){
     const queryUrl = baseUrl + encodeURI(query);
-    console.log('Query URL', queryUrl);
     return axios.get(queryUrl);
   }
   

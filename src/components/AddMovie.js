@@ -51,11 +51,9 @@ class AddMovie extends Component {
   }
 
   handleQuery(e) {
-    console.log('Query: ', this.state.query);
     let results = movieApi.searchMovie(this.state.query)
       .then(results => {
         this.setState({ results: results.data.results });
-        console.log('State updated with ', results.data.results)
       })
       .catch(err => console.log(err));
   }
