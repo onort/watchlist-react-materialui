@@ -77,29 +77,37 @@ class App extends Component {
   }
 
   handleAdd(movie) {
-    const snack = {open: true, message: 'Added to watchlist'};
-    fb.addMovie(movie, this.state.movies).then(movies => this.setState({ movies, snack }))
-                                         .catch(err => console.log(err)); // TODO: Handle Error
+    fb.addMovie(movie, this.state.movies).then(movies => {
+      const snack = {open: true, message: 'Added to watchlist'};
+      this.setState({ movies, snack });
+    }).catch(err => {
+      const snack = {open: true, message: 'An error occured'};
+      this.setState({ snack });
+    });
   }
 
   handleDelete(id) {
     fb.deleteMovie(id, this.state.movies)
       .then(movies => {
+        const snack = {open: true, message: 'Movie deleted'}
         const filteredMovies = this.state.filteredMovies.filter(movie => movie.id !== id)
-        this.setState({ movies, filteredMovies })
+        this.setState({ movies, filteredMovies, snack });
       })
-      .catch(err => console.log(err)); // TODO: Handle Error
+      .catch(err => {
+        const snack = {open: true, message: 'Movie deleted'}
+        this.setState({ snack });
+      });
 
   }
-
-  handleUp(id) {
-    const movies = utils.moveUp(this.state.movies, id);
+  // recieves movie now should send movies, movie, direction
+  handleUp(movieToMove) {
+    const movies = utils.moveMovie(this.state.movies, movieToMove, -1);
     this.setState({ movies, queueChange: true });
     this.updateFirebase(movies);
   }
 
-  handleDown(id) {
-    const movies = utils.moveDown(this.state.movies, id);
+  handleDown(movieToMove) {
+    const movies = utils.moveMovie(this.state.movies, movieToMove, 1);
     this.setState({ movies, queueChange: true });
     this.updateFirebase(movies);
   }

@@ -5,7 +5,6 @@ firebase.initializeApp(fbConfig);
 
 const auth = firebase.auth();
 const dbRef = firebase.database().ref();
-let userId;
 let userMoviesRef;
 
 function setRefs(uid) {
@@ -83,7 +82,7 @@ export const createUser = (email, pass) => {
 
 export const unAuth = () => {
   auth.signOut();
-  userId = null, userMoviesRef = null;
+  userMoviesRef = null;
 }
 
 auth.onAuthStateChanged(user => {

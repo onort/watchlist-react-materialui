@@ -1,23 +1,6 @@
 import isEmail from 'validator/lib/isEmail';
 import isEmpty from 'validator/lib/isEmpty';
 
-// TODO: refactor moveUp and moveDown to a single move function with an additional direction argument like +1, -1 or a string with a switch statement
-export function moveUp(movies, id) {
-  let index = movies.findIndex(movie => movie.id === id);
-  movies[index-1].queue = movies[index-1].queue + 1
-  movies[index].queue = movies[index].queue - 1;
-  movies.sort((a,b) => a.queue - b.queue);
-  return movies;
-}
-
-export function moveDown(movies, id) {
-  let index = movies.findIndex(movie => movie.id === id);
-  movies[index+1].queue = movies[index+1].queue - 1
-  movies[index].queue = movies[index].queue + 1;
-  movies.sort((a,b) => a.queue - b.queue);
-  return movies;
-}
-
 export function debounce(fn, delay) {
   var timer = null;
   return function () {
@@ -27,6 +10,20 @@ export function debounce(fn, delay) {
       fn.apply(context, args);
     }, delay);
   };
+}
+
+export function moveMovie(movies, movieToMove, direction) {
+  if ((movieToMove.queue > 0 && direction < 0) ||
+			(movieToMove.queue < movies.length-1 && direction > 0)) {
+		movies.forEach(movie => {
+			if(movie.queue == movieToMove.queue + direction) movie.queue -= direction;
+		});
+		movies.forEach(movie => {
+			if (movie.id == movieToMove.id) movie.queue += direction
+		});
+    movies.sort((a,b) => a.queue - b.queue);
+	}
+	return movies;
 }
 
 export function createGenreListWithCount(movies) {

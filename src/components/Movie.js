@@ -25,10 +25,10 @@ const Movie = (props) => {
   };
 
   const handleUp = () => {
-    props.onUp(movie.id);
+    props.onUp(movie);
   };
   const handleDown = () => {
-    props.onDown(movie.id);
+    props.onDown(movie);
   };
   const handleTop = () => {
     console.log('Top clicked!')
