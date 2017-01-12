@@ -1,9 +1,10 @@
 const webpack = require('webpack');
-const Visualizer = require('webpack-visualizer-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
+const Visualizer = require('webpack-visualizer-plugin');
 
 const config = {
   devtool: 'cheap-module-source-map',
+  noInfo: true,
   entry: './src/index.js',              
   output: {
     path: './dist',
@@ -54,6 +55,7 @@ const config = {
       threshold: 10240,
       minRatio: 0
     }),
+    new webpack.NoErrorsPlugin(),
     new Visualizer({
       filename: './statistics.html'
     })
