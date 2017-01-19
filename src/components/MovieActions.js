@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 
-import {Card, CardActions, CardHeader, CardMedia, CardText} from 'material-ui/Card';
+import { Card, CardActions, CardHeader, CardMedia, CardText } from 'material-ui/Card';
 import ArrowUp from 'material-ui/svg-icons/hardware/keyboard-arrow-up';
 import ArrowDown from 'material-ui/svg-icons/hardware/keyboard-arrow-down';
 import AvPlayArrow from 'material-ui/svg-icons/av/play-arrow';
@@ -20,7 +20,7 @@ const MovieActions = (props) => {
     actions: {
       clear: 'both'
     }
-  }
+  };
   const onDelete = (e) => {
     props.onDelete(e);
   };
@@ -52,8 +52,8 @@ const MovieActions = (props) => {
         anchorOrigin={{horizontal: 'left', vertical: 'top'}}
         targetOrigin={{horizontal: 'left', vertical: 'top'}}
       >
-        <MenuItem onTouchTap={onTop} disabled={true} primaryText="Move to Top" />
-        <MenuItem onTouchTap={onBottom} disabled={true} primaryText="Move to Bottom" />
+        <MenuItem onTouchTap={onTop} disabled primaryText="Move to Top" />
+        <MenuItem onTouchTap={onBottom} disabled primaryText="Move to Bottom" />
       </IconMenu>
       <div style={styles.right}>
         <IconButton tooltipPosition="bottom-center" tooltip="Watch Trailer">
@@ -63,7 +63,13 @@ const MovieActions = (props) => {
         </IconButton>
       </div>
     </CardActions>
-  )
-}
+  );
+};
+
+MovieActions.propTypes = {
+  name: PropTypes.string.isRequired,
+  onBottom: PropTypes.func.isRequired,
+  showUpDown: PropTypes.bool.isRequired
+};
 
 export default MovieActions;

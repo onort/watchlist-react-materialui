@@ -75,6 +75,6 @@ const genreIdsInfo = [
     "id": 37,
     "name": "Western"
   }
-]
+];
 
 export default genreIdsInfo;

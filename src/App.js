@@ -1,3 +1,4 @@
+/* eslint-disable no-console, react/jsx-no-bind */
 import React, { Component } from 'react';
 import * as utils from './utils';
 
@@ -6,7 +7,7 @@ import * as fb from './api/firebaseApi';
 import AppBar from 'material-ui/AppBar';
 import Divider from 'material-ui/Divider';
 import Downward from 'material-ui/svg-icons/navigation/arrow-downward';
-import FlatButton from 'material-ui/FlatButton'
+import FlatButton from 'material-ui/FlatButton';
 import FontIcon from 'material-ui/FontIcon';
 import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
@@ -36,7 +37,7 @@ const styles = {
     marginTop: '10%',
     left: '-40px',
   }
-}
+};
 
 class App extends Component {
   constructor(props) {
@@ -49,7 +50,8 @@ class App extends Component {
       queueChange: false,
       drawerOpen: false,
       loading: true
-    }
+    };
+  this.closeDrawer = this.closeDrawer.bind(this);
   this.handleAdd = this.handleAdd.bind(this);
   this.handleDelete = this.handleDelete.bind(this);
   this.handleDown = this.handleDown.bind(this);
@@ -89,7 +91,7 @@ class App extends Component {
     fb.createUser(email,pass)
       .then(user => {
         console.log(`Created user with uid: ${user.uid}`, user);
-        this.setState({ user })
+        this.setState({ user });
       })
       .catch(err => console.log(err));
   }
@@ -107,15 +109,14 @@ class App extends Component {
   handleDelete(id) {
     fb.deleteMovie(id, this.state.movies)
       .then(movies => {
-        const snack = {open: true, message: 'Movie deleted'}
-        const filteredMovies = this.state.filteredMovies.filter(movie => movie.id !== id)
+        const snack = {open: true, message: 'Movie deleted'};
+        const filteredMovies = this.state.filteredMovies.filter(movie => movie.id !== id);
         this.setState({ movies, filteredMovies, snack });
       })
       .catch(err => {
-        const snack = {open: true, message: 'Movie deleted'}
+        const snack = {open: true, message: 'Movie deleted'};
         this.setState({ snack });
       });
-
   }
   
   handleUp(movieToMove) {
@@ -136,14 +137,14 @@ class App extends Component {
 
   handleGenre(genre) {
     let filtered = this.state.movies.filter(movie => {
-      return movie.genre_ids ? movie.genre_ids.includes(genre) : false
+      return movie.genre_ids ? movie.genre_ids.includes(genre) : false;
     });
     this.setState({ filteredMovies: filtered });
   }
 
   snackClose() {
-    const snack = { open: false, message: '' }
-    this.setState({ snack })
+    const snack = { open: false, message: '' };
+    this.setState({ snack });
   }
 
   showAll() {
@@ -169,14 +170,15 @@ class App extends Component {
   }
 
   render() {
+    const { drawerOpen, filteredMovies, loading, movies, user, snack  } = this.state;
     const menu = (
       <div>
         <AddMovie handleAdd={this.handleAdd} />
         <RaisedButton label="Show Genres" onTouchTap={this.openGenreDrawer} /> 
         <GenreDrawer 
-          openDrawer={this.state.drawerOpen} 
-          movies={this.state.movies} 
-          closeDrawer={this.closeDrawer.bind(this)}
+          openDrawer={drawerOpen} 
+          movies={movies} 
+          closeDrawer={this.closeDrawer}
           filterGenre={this.handleGenre}
           showAll={this.showAll} />
         <IconMenu
@@ -199,8 +201,8 @@ class App extends Component {
             rightIcon={<Upward />} />
         </IconMenu>
       </div>
-    )
-    const render = this.state.user ? (
+    );
+    const render = user ? (
       <div>
         <AppBar title="Watchlist"
           iconElementLeft={<IconButton onTouchTap={this.openGenreDrawer}><Label /></IconButton>} 
@@ -208,24 +210,24 @@ class App extends Component {
            />
         <div style={styles.divStyle}>
           {menu}
-          <MovieList movies={this.state.movies} 
+          <MovieList movies={movies} 
             handleDelete={this.handleDelete}
             handleUp={this.handleUp}
             handleDown={this.handleDown}
             handleGenre={this.handleGenre}
-            filteredMovies={this.state.filteredMovies}
+            filteredMovies={filteredMovies}
             />
         </div>
         <Snackbar
-          open={this.state.snack.open}
-          message={this.state.snack.message}
+          open={snack.open}
+          message={snack.message}
           autoHideDuration={2000}
           onRequestClose={this.snackClose}
         />
       </div>
     ) :
-     <Login handleLogin={this.handleLogin} handleRegister={this.handleRegister} />
-    return this.state.loading ? <CircularProgress style={styles.progress} size={80} thickness={5} /> : render;
+     <Login handleLogin={this.handleLogin} handleRegister={this.handleRegister} />;
+    return loading ? <CircularProgress style={styles.progress} size={80} thickness={5} /> : render;
   }
 }
 

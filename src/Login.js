@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import isEmail from 'validator/lib/isEmail';
 import isEmpty from 'validator/lib/isEmpty';
 
@@ -37,7 +37,7 @@ class Login extends Component {
         emailError: '',
         passError: ''
       }
-    }
+    };
   }
 
   handleLogin(e) {
@@ -80,7 +80,7 @@ class Login extends Component {
               errorText={this.state.errors.passError}
             /><br />
             <RaisedButton label="Login" style={styles.button} 
-              primary={true} onTouchTap={this.handleLogin} />
+              primary onTouchTap={this.handleLogin} />
 
           </form>
         </Tab>
@@ -108,13 +108,18 @@ class Login extends Component {
               errorText={this.state.errors.passError}
             /><br />
             <RaisedButton label="Register" style={styles.button} 
-              primary={true} onTouchTap={this.handleRegister} />
+              primary onTouchTap={this.handleRegister} />
           </form>
         </Tab>
       </Tabs>
     </Paper>
-  )
+  );
   }
 }
+
+Login.propTypes = {
+  handleLogin: PropTypes.func.isRequired,
+  handleRegister: PropTypes.func.isRequired
+};
 
 export default Login;

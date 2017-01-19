@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+/* eslint-disable no-console */
+import React, { Component, PropTypes } from 'react';
 import axios from 'axios';
 
 import {debounce} from '../utils';
@@ -18,7 +19,7 @@ class AddMovie extends Component {
       addOpen: false,
       query: '',
       results: []
-    }
+    };
 
     this.handleAdd = this.handleAdd.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -34,7 +35,7 @@ class AddMovie extends Component {
   }
 
   handleClick() {
-    this.setState({ addOpen: true })
+    this.setState({ addOpen: true });
   }
   
   handleClose() {
@@ -42,9 +43,8 @@ class AddMovie extends Component {
   }
 
   handleChange(e) {
-    this.setState({ query: e.target.value })
+    this.setState({ query: e.target.value });
   }
-
 
   handleKeyUp(e) {
     if (this.state.query.length > 2) this.handleQuery();
@@ -82,14 +82,15 @@ class AddMovie extends Component {
       root: {
         paddingTop: '5%'
       }
-    }
+    };
     const actions = [
       <FlatButton
+        key="cancelButton"
         label="Cancel"
-        primary={true}
+        primary
         onTouchTap={this.handleClose}
       />
-    ]
+    ];
     return (
       <div>
         <IconButton style={styles.medium} 
@@ -106,7 +107,7 @@ class AddMovie extends Component {
           open={this.state.addOpen}
           onRequestClose={this.handleClose}
           contentStyle={styles.dialog}
-          autoScrollBodyContent={true}
+          autoScrollBodyContent
           repositionOnUpdate={false}
           style={styles.root}
           >
@@ -114,7 +115,7 @@ class AddMovie extends Component {
               onChange={this.handleChange}
               onKeyUp={this.handleKeyUp}
               maxLength="50"
-              fullWidth={true}
+              fullWidth
               />
             <ResultsList 
               results={this.state.results} 
@@ -122,8 +123,12 @@ class AddMovie extends Component {
               query={this.state.query} />
         </Dialog>
       </div>
-    )
+    );
   }
 }
+
+AddMovie.propTypes = {
+  handleAdd: PropTypes.func.isRequired
+};
 
 export default AddMovie;

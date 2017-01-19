@@ -1,4 +1,5 @@
-import React from 'react';
+/* eslint-disable react/jsx-no-bind */
+import React, { PropTypes } from 'react';
 
 import Badge from 'material-ui/Badge';
 import Divider from 'material-ui/Divider';
@@ -14,23 +15,23 @@ const GenreDrawer = (props) => {
   const handleGenreClick = (id) => {
     props.filterGenre(parseInt(id));
     props.closeDrawer();
-  }
+  };
   const showAll = () => {
     props.showAll();
     props.closeDrawer();
-  }
+  };
   const styles = {
     menu: {
       position: 'relative',
       top: '20%'
     }
-  }
-  const genreListWithCount = createGenreListWithCount(props.movies)
-  let realGenreList = []
+  };
+  const genreListWithCount = createGenreListWithCount(props.movies);
+  let realGenreList = [];
   // ?: IS this too expensive?
   for (let prop in genreListWithCount) {
-    let info = genreIdsInfo.find(genreIdInfo => genreIdInfo.id == prop)
-    genreListWithCount[info.name] = genreListWithCount[prop]
+    let info = genreIdsInfo.find(genreIdInfo => genreIdInfo.id == prop);
+    genreListWithCount[info.name] = genreListWithCount[prop];
     delete genreListWithCount[prop];
     realGenreList.push(
       <MenuItem key={prop} onTouchTap={handleGenreClick.bind(this, prop)} >
@@ -51,7 +52,12 @@ const GenreDrawer = (props) => {
         {realGenreList}
       </Menu>
     </Drawer>
-  )
-}
+  );
+};
 
-export default GenreDrawer
+GenreDrawer.propTypes = {
+  movies: PropTypes.array,
+  openDrawer: PropTypes.bool.isRequired
+};
+
+export default GenreDrawer;

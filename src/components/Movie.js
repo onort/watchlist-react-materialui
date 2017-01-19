@@ -1,4 +1,5 @@
-import React from 'react';
+/* eslint-disable no-console, react/jsx-no-bind */
+import React, { PropTypes } from 'react';
 import moment from 'moment';
 
 import AddedAt from 'material-ui/svg-icons/content/add-circle-outline';
@@ -31,10 +32,10 @@ const Movie = (props) => {
     props.onDown(movie);
   };
   const handleTop = () => {
-    console.log('Top clicked!')
+    console.log('Top clicked!');
   };
   const handleBottom = () => {
-    console.log('Bottom clicked!')
+    console.log('Bottom clicked!');
   };
 
   const styles = {
@@ -80,7 +81,7 @@ const Movie = (props) => {
     root: {
       position: 'relative'
     }
-  }
+  };
 
   const genres = movie.genre_ids ? movie.genre_ids.map(genre => {
     const genreText = genreList.find(genreInfo => genreInfo.id == genre);
@@ -97,17 +98,17 @@ const Movie = (props) => {
     <FloatingActionButton style={styles.queue} backgroundColor="#e2e2e2" zDepth={1}>
       #{movie.queue + 1}
     </FloatingActionButton>
-    <Card initiallyExpanded={true} style={styles.card}>
+    <Card initiallyExpanded style={styles.card}>
       <CardHeader
         title={movie.original_title}
         subtitle={date}
         actAsExpander={false}
-        showExpandableButton={true}
+        showExpandableButton
         style={styles.header}
         titleStyle={styles.title}
         subtitleStyle={styles.subtitle}
       />
-      <CardText expandable={true}>
+      <CardText expandable>
         <img style={styles.media} src={`https://image.tmdb.org/t/p/w185/${movie.poster_path}`} />
         <div style={styles.desc}>
           <p>{movie.overview}</p>
@@ -128,8 +129,13 @@ const Movie = (props) => {
         />
     </Card>
     </div>
-  )
-}
+  );
+};
+
+Movie.propTypes = {
+  movie: PropTypes.object.isRequired,
+  showUpDown: PropTypes.bool.isRequired
+};
 
 export default Movie;
 

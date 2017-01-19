@@ -2,9 +2,9 @@ import isEmail from 'validator/lib/isEmail';
 import isEmpty from 'validator/lib/isEmpty';
 
 export function debounce(fn, delay) {
-  var timer = null;
+  let timer = null;
   return function () {
-    var context = this, args = arguments;
+    let context = this, args = arguments;
     clearTimeout(timer);
     timer = setTimeout(function () {
       fn.apply(context, args);
@@ -19,7 +19,7 @@ export function moveMovie(movies, movieToMove, direction) {
 			if(movie.queue == movieToMove.queue + direction) movie.queue -= direction;
 		});
 		movies.forEach(movie => {
-			if (movie.id == movieToMove.id) movie.queue += direction
+			if (movie.id == movieToMove.id) movie.queue += direction;
 		});
     movies.sort((a,b) => a.queue - b.queue);
 	}

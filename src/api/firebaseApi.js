@@ -24,23 +24,23 @@ export const getData = () => {
       resolve(watchListData);
     });
   });
-}
+};
 
 export const addMovie = (movie, moviesState) => {
   return new Promise((resolve, reject) => {
     let lastQueue;
-    moviesState.length ? lastQueue = moviesState[moviesState.length -1].queue : lastQueue = -1
+    moviesState.length ? lastQueue = moviesState[moviesState.length -1].queue : lastQueue = -1;
     movie.addedAt = Date.now();
     movie.queue = lastQueue + 1;
     userMoviesRef.push(movie).then(getData().then(movies => resolve(movies)))
                              .catch(err => reject(err));
   });
-}
+};
 
 export const deleteMovie = (id, moviesState) => {
   return new Promise((resolve, reject) => {
     const delQuery = userMoviesRef.orderByChild('id').equalTo(id);
-    const movieToDelete = moviesState.find(movie => movie.id === id)
+    const movieToDelete = moviesState.find(movie => movie.id === id);
     moviesState.forEach(movie => {
       if (movie.queue > movieToDelete.queue) movie.queue--;
     });
@@ -48,13 +48,13 @@ export const deleteMovie = (id, moviesState) => {
     update(moviesState).then(getData().then(movies => resolve(movies)))
                        .catch(err => reject(err));
   });
-}
+};
 
 export const update = (movies) => {
   return new Promise(resolve => {
     userMoviesRef.set(movies).then(resolve());
   });
-}
+};
 
 export const getAuth = () => {
   return new Promise((resolve, reject) => {
@@ -65,8 +65,8 @@ export const getAuth = () => {
       }
       reject();
     });
-  })
-}
+  });
+};
 
 export const authUser = (email, pass) => {
   return new Promise((resolve, reject) => {
@@ -78,7 +78,7 @@ export const authUser = (email, pass) => {
       })
       .catch(err => reject(err));
   });
-}
+};
 
 export const createUser = (email, pass) => {
   return new Promise((resolve, reject) => {
@@ -90,9 +90,9 @@ export const createUser = (email, pass) => {
     })
       .catch(err => reject(err));
   });
-}
+};
 
 export const unAuth = () => {
   auth.signOut();
   userMoviesRef = null;
-}
+};

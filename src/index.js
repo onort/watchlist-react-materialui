@@ -4,11 +4,11 @@ import ReactDOM from 'react-dom';
 import {green700, grey800} from 'material-ui/styles/colors';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import injectTapEventPlugin from 'react-tap-event-plugin';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import App from './App';
 
-injectTapEventPlugin()
+injectTapEventPlugin();
 
 const muiTheme = getMuiTheme({
   palette: {
