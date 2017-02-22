@@ -40,13 +40,14 @@ const Movie = (props) => {
 
   const styles = {
     header: {
-      backgroundColor: '#e2e2e2'
+      backgroundColor: '#e2e2e2',
+      padding: '8px 12px'
     },
     title: {
-      fontSize: '28px'
+      fontSize: '24px'
     },
     subtitle: {
-      fontSize: '18px'
+      fontSize: '14px'
     },
     card: {
       marginTop: 36 + 'px',
@@ -60,9 +61,8 @@ const Movie = (props) => {
       float: 'right',
       minHeight: '280px',
       letterSpacing: '.5px',
-      fontSize: '16px',
-      lineHeight: 1.3,
-      wordSpacing: '1px'
+      fontSize: '14px',
+      lineHeight: '1.4em',
     },
     chipWrap: {
       display: 'flex',
@@ -74,8 +74,8 @@ const Movie = (props) => {
     queue: {
       position: 'absolute',
       left: '-72px',
-      top: '48px',
-      fontSize: '20px',
+      top: '28px',
+      fontSize: '14px',
       color: 'rgba(66, 66, 66, .87)'
     },
     root: {
@@ -98,11 +98,11 @@ const Movie = (props) => {
     <FloatingActionButton style={styles.queue} backgroundColor="#e2e2e2" zDepth={1}>
       #{movie.queue + 1}
     </FloatingActionButton>
-    <Card initiallyExpanded style={styles.card}>
+    <Card initiallyExpanded={false} style={styles.card}>
       <CardHeader
         title={movie.original_title}
         subtitle={date}
-        actAsExpander={false}
+        actAsExpander
         showExpandableButton
         style={styles.header}
         titleStyle={styles.title}

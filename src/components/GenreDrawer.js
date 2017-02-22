@@ -23,7 +23,8 @@ const GenreDrawer = (props) => {
   const styles = {
     menu: {
       position: 'relative',
-      top: '20%'
+      top: '15%',
+      width: 'auto'
     }
   };
   const genreListWithCount = createGenreListWithCount(props.movies);

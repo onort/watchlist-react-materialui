@@ -1,6 +1,7 @@
 /node_modules
 /mockData
 todos.md
+database.rules.json
 /src/api/config.js
 /dist/bundle.js
 /dist/bundle.js.gz

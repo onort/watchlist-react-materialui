@@ -60,6 +60,9 @@ class AddMovie extends Component {
 
   render() {
     const styles = {
+      container: {
+        display: 'inline-block'
+      },
       medium: {
       width: 96,
       height: 96,
@@ -92,7 +95,7 @@ class AddMovie extends Component {
       />
     ];
     return (
-      <div>
+      <div style={styles.container}>
         <IconButton style={styles.medium} 
           iconStyle={styles.mediumIcon}
           onTouchTap={this.handleClick} >

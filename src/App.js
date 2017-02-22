@@ -28,14 +28,21 @@ import MovieList from './components/MovieList';
 
 const styles = {
   divStyle : {
-  maxWidth: 600 + 'px',
-  margin: `0 auto`
+    maxWidth: 600 + 'px',
+    margin: `0 auto 36px`
+  },
+  genres: {
+    display: 'none'
   },
   progress: {
     position: 'absolute',
     marginLeft: '50%',
     marginTop: '10%',
     left: '-40px',
+  },
+  sort: {
+    float: 'right',
+    marginTop: '32px'
   }
 };
 
@@ -174,15 +181,14 @@ class App extends Component {
     const menu = (
       <div>
         <AddMovie handleAdd={this.handleAdd} />
-        <RaisedButton label="Show Genres" onTouchTap={this.openGenreDrawer} /> 
-        <GenreDrawer 
-          openDrawer={drawerOpen} 
-          movies={movies} 
-          closeDrawer={this.closeDrawer}
-          filterGenre={this.handleGenre}
-          showAll={this.showAll} />
+        <RaisedButton 
+          label="Show Genres" 
+          onTouchTap={this.openGenreDrawer}
+          style={styles.genres}
+        /> 
         <IconMenu
           iconButtonElement={<IconButton><SortIcon /></IconButton>}
+          style={styles.sort}
         >
           <MenuItem primaryText="Sort by" />
           <Divider />
@@ -200,6 +206,12 @@ class App extends Component {
             primaryText="Date Added"
             rightIcon={<Upward />} />
         </IconMenu>
+         <GenreDrawer 
+          openDrawer={drawerOpen} 
+          movies={movies} 
+          closeDrawer={this.closeDrawer}
+          filterGenre={this.handleGenre}
+          showAll={this.showAll} />
       </div>
     );
     const render = user ? (

@@ -18,7 +18,7 @@ const MovieList = (props) => {
   
   return (
     <div>
-      {movies}
+      {filtered.length ? movies : <p className="no-movies">You have no movies in your watchlist.</p>}
     </div>
   );
 };

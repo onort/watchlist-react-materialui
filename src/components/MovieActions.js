@@ -18,7 +18,8 @@ const MovieActions = (props) => {
       float: 'right'
     },
     actions: {
-      clear: 'both'
+      clear: 'both',
+      padding: 0
     }
   };
   const onDelete = (e) => {

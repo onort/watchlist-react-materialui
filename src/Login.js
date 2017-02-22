@@ -69,6 +69,7 @@ class Login extends Component {
           <form style={styles.tab}>
             <TextField
               hintText="E-mail"
+              floatingLabelText="E-mail"
               ref="loginEmail"
               errorText={this.state.errors.emailError}
             /><br />
